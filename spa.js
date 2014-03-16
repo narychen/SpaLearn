@@ -4,6 +4,36 @@ newcap: true, nomen: true, plusplus: true,
 regexp: true, sloppy: true, vars: true,
 white: true
 */
+function extend(subConstructor, superConstrutor){
+    subConstructor.prototype = Object.create(superConstrutor.prototype, {
+        constructor: {
+            value: subConstructor,
+            enumerable: false,
+            writable: true,
+            configurable: true
+        }
+    });
+}
+
+var BaseClass = function(a){
+    this.a = a;
+}
+
+BaseClass.prototype.aaa = function(){
+    alert(this.a);
+}
+
+var InheritClass = function(a){
+    this.a = a;
+}
+
+InheritClass.prototype = new BaseClass('super');
+InheritClass.prototype.super_aaa = InheritClass.prototype.aaa;
+InheritClass.prototype.aaa = function(){
+    InheritClass.prototype.super_aaa();
+    alert(this.a);
+}
+
 var spa = (function ($) {
 	var configMap = {
 		extended_height: 434,
@@ -33,6 +63,8 @@ var spa = (function ($) {
 
 	onClickSlider = function (event) {
 		toggleSlider();
+        var test = new InheritClass('inherit');
+        test.aaa();
 		return false;
 	};
 
@@ -51,3 +83,6 @@ jQuery(document).ready(
 		spa.initModule(jQuery('#spa'));
 	}
 );
+
+
+
