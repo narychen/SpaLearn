@@ -1,9 +1,8 @@
-
 var flib = (function(){
 
 var _ = require("underscore");
 
-function printf() { if(1) console.log.apply(undefined, arguments); }
+function printf() { if(0) console.log.apply(undefined, arguments); }
 
 function existy(x) { return x != null };
 
@@ -60,7 +59,7 @@ function restrict(table, pred) {
         else
             return _.without(newTable, obj);
     }, table);
-};
+}
 
 function _mymap(obj, iter, context){
     return _.reduce(obj, function(memo, value, index, list){
@@ -184,6 +183,14 @@ Queue.prototype = {
 printf(new Queue([1,2,3]));
 printf((new Queue([1,2,3])).enqueue(108));
 
+
+function randString(len){
+    var ascii = repeatedly(len, partial1(rand, 26));
+    return _.map(ascii, function(n){
+        return n.toString(36);
+    }).join('');
+}
+
 return {
     existy: existy,
     truthy: truthy,
@@ -201,10 +208,11 @@ return {
     curry2: curry2,
     partial2: partial2,
     partial1: partial1,
-    merge: merge
+    merge: merge,
+    rand: rand,
+    randString: randString
 
-
-}
+};
 
 })();
 
