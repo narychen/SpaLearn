@@ -18,7 +18,6 @@ function autoReg(){
         password: flib.randString(8)
     };
     
-    
     var form = {
         form: {
             username: fake.username,
@@ -36,7 +35,6 @@ function autoReg(){
             
         }
     };
-    
     
     request.post(
         'http://www.anxin-ex.com/index.php?m=member&c=index&a=register&siteid=1', form,
