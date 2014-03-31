@@ -5,6 +5,7 @@ var fs = require('fs');
 var flib = require('./functional_lib');
 var _ = require('underscore');
 var cnt = 0;
+var go = 0;
 
 function autoReg(){
     var fake = {
@@ -30,11 +31,13 @@ function autoReg(){
             siteid: '1',
             forward: '',
             nickname: '',
-            promotion: 'lumin659',
+            promotion: '',
             dosubmit: '1'
             
         }
     };
+    
+    go += 1;
     
     request.post(
         'http://www.anxin-ex.com/index.php?m=member&c=index&a=register&siteid=1', form,
@@ -48,21 +51,25 @@ function autoReg(){
                 var regInfo = '[' + cnt + '] ' + 
                     'username: ' + fake.username + ', ' + 
                     'password: ' + fake.password + ', ' + 
-                    'email: ' + fake.email() + '\n';
-                fs.appendFile('./reginfo.html', regInfo, function (err) {
+                    'email: ' + fake.email() + '<br>\n';  
+                fs.appendFile('../../../phpdir/reginfo_async.html', regInfo, function (err) {
                     if (err) throw err;
                     console.log('write reginfo!');
                 });
             }else{
                 console.log('reg fail!');
-                fs.writeFile('./regdebug.html', body, function (err) {
+                fs.writeFile('../../../phpdir/regdebug_async.html', body, function (err) {
                     if (err) throw err;
                     console.log('write debug!');
                 });
             }
-            autoReg();
+            go--;
+            if(go === 0){
+                _.each(_.range(50), autoReg);
+            }
+//            autoReg();
         }
     );
 }
 
-autoReg();
+_.each(_.range(20), autoReg);
