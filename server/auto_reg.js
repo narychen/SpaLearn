@@ -38,7 +38,6 @@ function autoReg(){
     };
     
     
-    
     request.post(
         'http://www.anxin-ex.com/index.php?m=member&c=index&a=register&siteid=1', form,
         function(error,response,body){
