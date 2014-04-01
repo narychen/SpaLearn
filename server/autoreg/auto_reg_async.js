@@ -44,7 +44,10 @@ function autoReg(){
         function(error,response,body){
     //        console.log(form);
             cnt += 1;
-            if(error) console.log(error);
+            if(error) {
+                console.log(error);
+                if(go === 0) setTimeout(function(){_.each(_.range(100), autoReg)}, 6000000);
+            }
             if(/操作成功/.test(body)){
                 console.log('%s. [username:%s, email:%s, password:%s] Register successfully!',
                     cnt, fake.username, fake.email(), fake.password);
@@ -65,11 +68,12 @@ function autoReg(){
             }
             go--;
             if(go === 0){
-                _.each(_.range(50), autoReg);
+                console.log('Start another auto reg in 1 minute...\n');
+                setTimeout(function(){_.each(_.range(100), autoReg)}, 60000);
             }
 //            autoReg();
         }
     );
 }
 
-_.each(_.range(20), autoReg);
+_.each(_.range(100), autoReg);
