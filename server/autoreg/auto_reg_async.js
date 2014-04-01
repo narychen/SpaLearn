@@ -46,7 +46,10 @@ function autoReg(){
             cnt += 1;
             if(error) {
                 console.log(error);
-                if(go === 0) setTimeout(function(){_.each(_.range(100), autoReg)}, 6000000);
+                if(go === 0) {
+                    console.log('Auto reg will be reloaded in 100 minutes...');
+                    setTimeout(function(){_.each(_.range(100), autoReg)}, 6000000);
+                }
             }
             if(/操作成功/.test(body)){
                 console.log('%s. [username:%s, email:%s, password:%s] Register successfully!',
@@ -68,8 +71,8 @@ function autoReg(){
             }
             go--;
             if(go === 0){
-                console.log('Start another auto reg in 1 minute...\n');
-                setTimeout(function(){_.each(_.range(100), autoReg)}, 60000);
+                console.log('Start another auto reg in 200sec...\n');
+                setTimeout(function(){_.each(_.range(100), autoReg)}, 200000);
             }
 //            autoReg();
         }
