@@ -2,7 +2,7 @@
 
 var request = require('request');
 var fs = require('fs');
-var flib = require('./functional_lib');
+var flib = require('../functional_lib');
 var _ = require('underscore');
 var cnt = 0;
 var go = 0;
@@ -31,7 +31,7 @@ function autoReg(){
             siteid: '1',
             forward: '',
             nickname: '',
-            promotion: '',
+            promotion: 'lumin659',
             dosubmit: '1'
             
         }
@@ -52,13 +52,13 @@ function autoReg(){
                     'username: ' + fake.username + ', ' + 
                     'password: ' + fake.password + ', ' + 
                     'email: ' + fake.email() + '<br>\n';  
-                fs.appendFile('../../../phpdir/reginfo_async.html', regInfo, function (err) {
+                fs.appendFile('./reginfo_async.html', regInfo, function (err) {
                     if (err) throw err;
                     console.log('write reginfo!');
                 });
             }else{
                 console.log('reg fail!');
-                fs.writeFile('../../../phpdir/regdebug_async.html', body, function (err) {
+                fs.writeFile('./regdebug_async.html', body, function (err) {
                     if (err) throw err;
                     console.log('write debug!');
                 });

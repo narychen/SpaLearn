@@ -2,7 +2,7 @@
 
 var request = require('request');
 var fs = require('fs');
-var flib = require('./functional_lib');
+var flib = require('../functional_lib');
 var _ = require('underscore');
 var cnt = 0;
 
