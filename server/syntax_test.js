@@ -213,7 +213,7 @@ var flib = require('./functional_lib');
 //var nums = [1,2,3,null,5];
 //console.log(_.reduce(nums, function(total, n) { return total * n }));
 
-var i = 0;
+/*var i = 0;
 //console.log('%s...', i);
 function recur(i) {
     console.log(i--);
@@ -228,3 +228,19 @@ function newRecur(i){
 }
 
 console.log(newRecur(200*200));
+*/
+
+var library = [
+            {title: "SICP", isbn: "0262010771", ed: 1}, 
+            {title: "SICP", isbn: "0262510871", ed: 2},
+            {title: "Joy of Clojure", isbn: "1935182641", ed: 1}
+];
+
+var v = _.chain(library)
+    .pluck('title')
+    .sort()
+    .value();
+
+console.log(v);
+
+_.tap([1,2,3], flib.note);

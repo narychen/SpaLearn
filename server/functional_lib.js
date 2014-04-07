@@ -16,6 +16,18 @@ function cat() {
         return [];
 }
 
+function fail(thing){
+    throw new Erro(thing);
+}
+
+function warn(thing){
+    console.log(['WARNING:', thing].join(' '));
+}
+    
+function note(thing){
+    console.log(['NOTE:', thing].join(' '));
+}
+    
 function mapcat(fun, coll) {
     return cat.apply(null, _.map(coll, fun));
 }
@@ -212,7 +224,10 @@ return {
     merge: merge,
     rand: rand,
     randString: randString,
-    trampoline: trampoline
+    trampoline: trampoline,
+    fail: fail,
+    warn: warn,
+    note: note
 
 };
 
