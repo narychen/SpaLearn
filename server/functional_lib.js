@@ -101,13 +101,6 @@ printf(iterateUntil(
 var nums = [1,2,3,null,5];
 printf(_.reduce(nums, function(total, n) { return total * n }));
 
-function partial1(fun, arg1) {
-    return function(/* args */) {
-        var args = construct(arg1, arguments);
-        return fun.apply(fun, args);
-    };
-}
-
 function repeat(times, VALUE) {
     return _.map(_.range(times), function() {
         return VALUE;
@@ -190,6 +183,14 @@ function randString(len){
         return n.toString(36);
     }).join('');
 }
+    
+function trampoline(fun){
+    var ret = fun.apply(fun, _.rest(arguments));
+    while(_.isFunction(ret)){
+        ret = ret();
+    }
+    return ret;
+}
 
 return {
     existy: existy,
@@ -210,7 +211,8 @@ return {
     partial1: partial1,
     merge: merge,
     rand: rand,
-    randString: randString
+    randString: randString,
+    trampoline: trampoline
 
 };
 

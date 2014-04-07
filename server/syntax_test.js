@@ -1,6 +1,7 @@
 //var util = require("util");
 //var events = require("events");
-//var _ = require("underscore");
+var _ = require("underscore");
+var flib = require('./functional_lib');
 //
 //function MyStream() {
 //    events.EventEmitter.call(this);
@@ -213,12 +214,17 @@
 //console.log(_.reduce(nums, function(total, n) { return total * n }));
 
 var i = 0;
-console.log('%s...', i);
-//(function(){
-//    console.log(i++);
-//    var call = arguments.callee;
+//console.log('%s...', i);
+function recur(i) {
+    console.log(i--);
+    if(i > 0) return flib.partial1(recur, i);
+    else return 'end';
 //    setImmediate(function(){
 //        call();
 //    });
-//}());
+};
+function newRecur(i){
+    return flib.trampoline(recur, i);
+}
 
+console.log(newRecur(200*200));
