@@ -4,9 +4,9 @@ var _ = require("underscore");
 
 function printf() { if(0) console.log.apply(undefined, arguments); }
 
-function existy(x) { return x != null };
+function existy(x) { return x != null }
 
-function truthy(x) { return (x !== false) && existy(x) };
+function truthy(x) { return (x !== false) && existy(x) }
 
 function cat() {
     var head = _.first(arguments);
@@ -17,7 +17,7 @@ function cat() {
 }
 
 function fail(thing){
-    throw new Erro(thing);
+    throw new Error(thing);
 }
 
 function warn(thing){
@@ -137,11 +137,26 @@ function _skipTake(n, coll){
 printf('skipTake: %j', _skipTake(2, [1,2,3,4]));
 printf('skipTake: %j', _skipTake(3, _.range(20)));
 
+function curry1(fun) {
+    return function(arg) {
+        return fun(arg);
+    };
+}
 
 function curry2(fun) {
     return function(secondArg) {
         return function(firstArg) {
             return fun(firstArg, secondArg);
+        };
+    };
+}
+
+function curry3(fun) {
+    return function(last) {
+        return function(middle) {
+            return function(first) {
+                return fun(first, middle, last);
+            };
         };
     };
 }
@@ -156,6 +171,14 @@ function partial2(fun, arg1, arg2) {
 function partial1(fun, arg1) {
     return function(/* args */) {
         var args = construct(arg1, arguments);
+        return fun.apply(fun, args);
+    };
+}
+
+function partial(fun) {
+    var pargs = _.rest(arguments);
+    return function() {
+        var args = cat(pargs, _.toArray(arguments));
         return fun.apply(fun, args);
     };
 }
@@ -217,6 +240,78 @@ function actions(acts, done){
     };
 }
 
+function validator(message, fun){
+    var f = function() {
+        return fun.apply(fun, arguments);
+    };
+    f.message = message;
+    return f;
+}
+
+function checker() {
+    var validators = _.toArray(arguments);
+    return function(obj) {
+        return _.reduce(validators, function(errs, check) {
+            if (check(obj))
+                return errs;
+            else
+                return _.chain(errs).push(check.message).value();
+        }, []);
+    };
+}
+
+function always(v) {
+    return function() {
+        return v;
+    };
+}
+
+function condition1() {
+    var validators = _.toArray(arguments);
+    return function(fun, arg) {
+        var errors = mapcat(function(isValid) {
+            return isValid(arg) ? [] : [isValid.message];
+        }, validators);
+        if(!_.isEmpty(errors))
+            throw new Error(errors.join(','));
+        return fun(arg);
+    };
+}
+
+function dispatch() {
+    var funs = _.toArray(arguments);
+    var size = funs.length;
+
+    return function(target) {
+        var ret;
+        var args = _.rest(arguments);
+        for(var funIndex = 0; funIndex < size; funIndex++){
+            var fun = funs[funIndex];
+            ret = fun.apply(fun, construct(target, args));
+            if(existy(ret)) return ret;
+        }
+        return ret;
+    };
+}
+
+function invoker(name, method) {
+    return function(target) {
+        if(!existy(target)) fail('Must provide a target');
+        var targetMethod = target[name];
+        var args = _.rest(arguments);
+        return doWhen((existy(targetMethod) && method === targetMethod), function() {
+            return targetMethod.apply(target, args);
+        });
+    };
+}
+
+function doWhen(cond, action) {
+    if(truthy(cond))
+        return action();
+    else
+        return undefined;
+}
+
 return {
     existy: existy,
     truthy: truthy,
@@ -228,12 +323,14 @@ return {
     restrict: restrict,
     best: best,
     iterateUntil: iterateUntil,
-    partial1: partial1,
     repeat: repeat,
     repeatedly: repeatedly,
+    curry3: curry3,
     curry2: curry2,
+    curry1: curry1,
     partial2: partial2,
     partial1: partial1,
+    partial: partial,
     merge: merge,
     rand: rand,
     randString: randString,
@@ -242,6 +339,13 @@ return {
     warn: warn,
     note: note,
     actions: actions,
+    validator: validator,
+    checker: checker,
+    always: always,
+    condition1: condition1,
+    dispatch: dispatch,
+    invoker: invoker,
+    doWhen: doWhen
 
 };
 
